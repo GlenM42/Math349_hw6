@@ -75,10 +75,6 @@ adf.test(Toothpaste$y, alternative = "stationary")
 # Clearly, based on graph, and the ADF test, we have to transform the data
 # to make it stationary.
 
-par(mfrow=c(1,2))
-Acf(Toothpaste$y)
-Pacf(Toothpaste$y, main ="PACF for Differenced Series")
-
 z = diff(Toothpaste$y, differences = 1)
 plot(z, type='l')
 adf.test(z, alternative = "stationary")
@@ -89,3 +85,41 @@ adf.test(z, alternative = "stationary")
 z = diff(Toothpaste$y, differences = 2)
 plot(z, type='l')
 adf.test(z, alternative = "stationary")
+
+# Now we do have a stationary time series, as the p-value is lower
+# than 5%.
+
+par(mfrow=c(1,2))
+Acf(z)
+Pacf(z, main ="PACF for Differenced Series")
+
+# ACF cuts off at 2, and the PACF cuts off at 2. Therefore we have p=2, q=2,
+# and the d = 2. 
+
+sarima(Toothpaste$y, 2,2,2)
+sarima(Toothpaste$y, 1,1,1)
+sarima(Toothpaste$y, 1,2,1)
+
+# We try a couple of similar models just to check the numbers, and it looks
+# like by the combination of all, the best one has parameters 2,2,2. 
+
+## Problem 2 -- part C
+
+sarima(Toothpaste$y, 2,2,2)
+
+# Judging based on the Normal QQ plot, the normality assumption holds.
+# The variance is fairly constant throughout the time interval. 
+# The p-values are non-zero, so the independence assumption holds. 
+
+
+## Problem 2 -- part D
+
+sarima.for(Toothpaste$y, 6,2,2,2)
+
+# 1039.040 +- 2.693958 * 1.96
+# 1046.730 +- 5.542272 * 1.96
+# 1053.865 +- 7.983641 * 1.96
+# 1060.852 +- 10.153826 * 1.96
+# 1067.801 +- 12.165849 * 1.96
+# 1074.740 +- 14.087426 * 1.96
+
